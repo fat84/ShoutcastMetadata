@@ -35,19 +35,18 @@ class ShoutcastMetadata {
     /**
      * StreamMetaData constructor.
      *
-     * @param $hostname
-     * @param int $port
+     * @param $url
      */
-    public function __construct($hostname, $port=80, $path='/') {
-        $this->hostname = $hostname;
-        $this->port = $port;
-        $this->path = $path;
+    public function __construct($url) {
+        $this->hostname = parse_url($url,PHP_URL_HOST);
+        $this->port = parse_url($url, PHP_URL_PORT);
+        $this->path = parse_url($url,PHP_URL_PATH);
     }
 
     /**
      * @return string
      */
-    public function readStreamTitle($default='') {
+    public function readTitle($default='') {
         $fp = fsockopen($this->hostname, $this->port, $errno, $errstr, $this->timeout);
         if (!$fp) {
             echo "$errstr ($errno)<br />\n";
@@ -73,7 +72,9 @@ class ShoutcastMetadata {
             for ($i = 0; $i < $count; $i++) {
                 fread($fp, $this->chunkSize);
             }
-            fread($fp, $last);
+            if ($last) {
+                fread($fp, $last);
+            }
 
             $byte = fread($fp, 1);
             $byte = ord($byte);
@@ -108,7 +109,3 @@ class ShoutcastMetadata {
         return $result;
     }
 }
-
-//$instance = new ShoutcastMetadata('example.com', 8020);
-//echo $instance->readStreamTitle("Unknown");
-

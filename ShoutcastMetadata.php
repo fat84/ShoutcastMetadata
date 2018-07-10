@@ -10,6 +10,11 @@ class ShoutcastMetadata {
     /**
      * @var string
      */
+    public $url;
+
+    /**
+     * @var string
+     */
     public $hostname;
 
     /**
@@ -38,9 +43,10 @@ class ShoutcastMetadata {
      * @param $url
      */
     public function __construct($url) {
+        $this->url = $url;
         $this->hostname = parse_url($url,PHP_URL_HOST);
-        $this->port = parse_url($url, PHP_URL_PORT);
-        $this->path = parse_url($url,PHP_URL_PATH);
+        $this->port = parse_url($url, PHP_URL_PORT) ? parse_url($url, PHP_URL_PORT) : 80;
+        $this->path = parse_url($url,PHP_URL_PATH) ? parse_url($url, PHP_URL_PATH) : '/';
     }
 
     /**
@@ -54,6 +60,7 @@ class ShoutcastMetadata {
             $out = "GET " . $this->path . " HTTP/1.1\r\n";
             $out .= "Host: " . $this->hostname . "\r\n";
             $out .= "Icy-MetaData:1\r\n";
+            //$out .= "Content-Type: charset=utf-8\r\n";
             $out .= "Connection: Close\r\n\r\n";
             fwrite($fp, $out);
             $resultHeaders = '';

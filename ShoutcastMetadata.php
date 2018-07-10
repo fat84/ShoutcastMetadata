@@ -18,6 +18,11 @@ class ShoutcastMetadata {
     public $port;
 
     /**
+     * @var string
+     */
+    public $path;
+
+    /**
      * @var int
      */
     public $timeout = 30;
@@ -33,9 +38,10 @@ class ShoutcastMetadata {
      * @param $hostname
      * @param int $port
      */
-    public function __construct($hostname, $port=80) {
+    public function __construct($hostname, $port=80, $path='/') {
         $this->hostname = $hostname;
         $this->port = $port;
+        $this->path = $path;
     }
 
     /**
@@ -46,7 +52,7 @@ class ShoutcastMetadata {
         if (!$fp) {
             echo "$errstr ($errno)<br />\n";
         } else {
-            $out = "GET /radio HTTP/1.1\r\n";
+            $out = "GET " . $this->path . " HTTP/1.1\r\n";
             $out .= "Host: " . $this->hostname . "\r\n";
             $out .= "Icy-MetaData:1\r\n";
             $out .= "Connection: Close\r\n\r\n";

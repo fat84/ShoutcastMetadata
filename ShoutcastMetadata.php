@@ -104,7 +104,7 @@ class ShoutcastMetadata {
      * @return array
      */
     protected function _parseStringData($delimiter1, $delimiter2, $string) {
-        $result = [];
+        $result = array();
         $arr = explode($delimiter1, $string);
         foreach ($arr as $key=>$value) {
             if (empty($value)) continue;
